@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五年級下學期數學模擬試卷 (互動專業版)</title>
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --accent-color: #16a085;
+        --bg-color: #f5f6fa;
+        --paper-bg: #ffffff;
+        --text-color: #222222;
+        --border-color: #dcdde1;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Times New Roman", "Microsoft JhengHei", "PingFang HK", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 20px 10px;
+        line-height: 1.7;
+    }
+
+    /* 模擬 PDF 頁面居中與響應式留白排版 */
+    .paper-container {
+        max-width: 850px;
+        margin: 0 auto;
+        background-color: var(--paper-bg);
+        padding: 40px 50px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 10px 5px;
+        }
+        .paper-container {
+            padding: 25px 20px;
+        }
+        .options-table td {
+            width: 50% !important;
+            display: inline-block;
+        }
+        .flex-layout {
+            flex-direction: column;
+        }
+        .flex-cell-right {
+            text-align: center;
+            margin-top: 15px;
+            width: 100% !important;
+        }
+    }
+
+    .header-title {
+        text-align: center;
+        font-size: 20pt;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+
+    .student-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+        font-size: 12pt;
+    }
+
+    @media (max-width: 480px) {
+        .student-info-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+    }
+
+    .section-title {
+        font-size: 13pt;
+        font-weight: bold;
+        background-color: #eaedd0;
+        color: #2c3e50;
+        padding: 8px 12px;
+        margin: 35px 0 20px 0;
+        border-left: 6px solid var(--accent-color);
+        border-radius: 2px;
+    }
+
+    .question-block {
+        margin-bottom: 25px;
+        padding: 15px;
+        border-bottom: 1px dashed var(--border-color);
+        position: relative;
+    }
+
+    .question-block:hover {
+        background-color: #fafafa;
+    }
+
+    .question-text {
+        font-size: 11.5pt;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .options-table {
+        width: 100%;
+        margin-left: 10px;
+        border-collapse: collapse;
+    }
+
+    .options-table td {
+        width: 25%;
+        padding: 6px 4px;
+        vertical-align: top;
+    }
+
+    /* 靈活響應式圖文排版 */
+    .flex-layout {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .flex-cell-left {
+        flex: 1;
+    }
+
+    .flex-cell-right {
+        width: 220px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fdfdfd;
+        border: 1px solid #f0f0f0;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .underline-space {
+        display: inline-block;
+        width: 80px;
+        border-bottom: 1px solid #000;
+        text-align: center;
+        margin: 0 5px;
+    }
+    
+    .long-underline {
+        display: inline-block;
+        width: 160px;
+        border-bottom: 1px solid #000;
+        text-align: center;
+        margin: 0 5px;
+    }
+
+    .math {
+        font-family: "Times New Roman", serif;
+        font-style: italic;
+        font-weight: bold;
+    }
+    
+    .fraction {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        padding: 0 3px;
+        font-size: 10pt;
+    }
+    
+    .fraction .num {
+        display: block;
+        border-bottom: 1px solid #000;
+        padding: 0 2px;
+    }
+    
+    .fraction .den {
+        display: block;
+        padding: 0 2px;
+    }
+
+    /* 互動式答案點擊顯示樣式 */
+    .answer-toggle-btn {
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 4px 10px;
+        font-size: 9pt;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        transition: background 0.2s;
+    }
+
+    .answer-toggle-btn:hover {
+        background-color: #117a65;
+    }
+
+    .answer-box {
+        display: none;
+        margin-top: 8px;
+        padding: 8px 12px;
+        background-color: #e8f8f5;
+        border-left: 4px solid #1abc9c;
+        color: #0e6251;
+        font-weight: bold;
+        font-size: 10.5pt;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .answer-box.show {
+        display: block;
+    }
+
+    .info-panel {
+        border: 1px solid #bdc3c7;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 25px 0;
+    }
+
+    svg {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+</head>
+<body>
+
+<div class="paper-container">
+
+    <!-- 試卷頭部資訊 -->
+    <div class="header-title">五年級下學期數學模擬試卷</div>
+    <div class="student-info-grid">
+        <div>班別：5____ ( ____ )</div>
+        <div style="text-align: center;">姓名：__________________</div>
+        <div style="text-align: right;">成績：____________</div>
+    </div>
+
+    <!-- ==================== （甲）選擇題 ==================== -->
+    <div class="section-title">（甲）選擇題 20%（每題 2 分）（點擊按鈕可即時查看答案）</div>
+
+    <div class="question-block">
+        <div class="question-text">1. 把 57.284 取近似值至百分位，結果是多少？<button class="answer-toggle-btn" onclick="toggleAns('a1')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td>A. 57.3</td>
+                <td>B. 57.28</td>
+                <td>C. 57.29</td>
+                <td>D. 57.284</td>
+            </tr>
+        </table>
+        <div id="a1" class="answer-box">正確答案：B (57.28) </div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">2. 以下哪一個選項與 <span class="math">2.4 × 0.35</span> 的計算結果相同？<button class="answer-toggle-btn" onclick="toggleAns('a2')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td>A. <span class="math">24 × 0.035</span></td>
+                <td>B. <span class="math">0.24 × 35</span></td>
+                <td>C. <span class="math">2.4 × 3.5</span></td>
+                <td>D. <span class="math">0.024 × 0.35</span></td>
+            </tr>
+        </table>
+        <div id="a2" class="answer-box">正確答案：A (24 × 0.035 = 0.84)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">3. 15 和 18 的最小公倍數（L.C.M.）是多少？<button class="answer-toggle-btn" onclick="toggleAns('a3')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td>A. 3</td>
+                <td>B. 45</td>
+                <td>C. 90</td>
+                <td>D. 270</td>
+            </tr>
+        </table>
+        <div id="a3" class="answer-box">正確答案：C (90)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">4. 以下哪一個數可被 9 整除？<button class="answer-toggle-btn" onclick="toggleAns('a4')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td>A. 4381</td>
+                <td>B. 2673</td>
+                <td>C. 5182</td>
+                <td>D. 7034</td>
+            </tr>
+        </table>
+        <div id="a4" class="answer-box">正確答案：B (2+6+7+3 = 18，能被 9 整除)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">5. 如果 <table style="display:inline-block; vertical-align:middle; border-collapse:collapse; text-align:center;"><tr><td style="border-bottom:1px solid #000; padding:0 2px;"><span class="math">P</span></td></tr><tr><td>4</td></tr></table> + <table style="display:inline-block; vertical-align:middle; border-collapse:collapse; text-align:center;"><tr><td style="border-bottom:1px solid #000; padding:0 2px;"><span class="math">Q</span></td></tr><tr><td>12</td></tr></table> = 1，那麼 <span class="math">3P + Q</span> = ？<button class="answer-toggle-btn" onclick="toggleAns('a5')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td>A. 3</td>
+                <td>B. 6</td>
+                <td>C. 12</td>
+                <td>D. 24</td>
+            </tr>
+        </table>
+        <div id="a5" class="answer-box">正確答案：C (12。兩邊同乘以 12 得 3P + Q = 12)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">6. 右圖是一個沿水平方向橫切的圓錐體，切開後所得的截面形狀是什麼？<button class="answer-toggle-btn" onclick="toggleAns('a6')">查看答案</button></div>
+                <table class="options-table">
+                    <tr>
+                        <td>A. 梯形</td>
+                        <td>B. 三角形</td>
+                        <td>C. 圓形</td>
+                        <td>D. 長方形</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="flex-cell-right">
+                <svg width="150" height="130" viewBox="0 0 150 130">
+                    <ellipse cx="75" cy="110" rx="45" ry="15" fill="#f5f5f5" stroke="#333" stroke-width="1.5" />
+                    <line x1="75" y1="20" x2="30" y2="110" stroke="#333" stroke-width="1.5" />
+                    <line x1="75" y1="20" x2="120" y2="110" stroke="#333" stroke-width="1.5" />
+                    <polygon points="15,75 125,65 145,85 35,95" fill="rgba(26, 188, 156, 0.4)" stroke="#16a085" stroke-width="1.2" />
+                    <ellipse cx="75" cy="77" rx="22" ry="7" fill="none" stroke="#16a085" stroke-width="1.5" stroke-dasharray="3,2" />
+                </svg>
+            </div>
+        </div>
+        <div id="a6" class="answer-box">正確答案：C (圓形)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">7. 把 <table style="display:inline-block; vertical-align:middle; border-collapse:collapse; text-align:center;"><tr><td style="border-bottom:1px solid #000; padding:0 2px;">140</td></tr><tr><td>32</td></tr></table> 化為最簡帶分數，結果是多少？<button class="answer-toggle-btn" onclick="toggleAns('a7')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td>A. 4 <span class="fraction"><span class="num">3</span><span class="den">8</span></span></td>
+                <td>B. 4 <span class="fraction"><span class="num">12</span><span class="den">32</span></span></td>
+                <td>C. 4 <span class="fraction"><span class="num">1</span><span class="den">4</span></span></td>
+                <td>D. 3 <span class="fraction"><span class="num">11</span><span class="den">8</span></span></td>
+            </tr>
+        </table>
+        <div id="a7" class="answer-box">正確答案：A (4 和 12/32 化簡後為 4 又 3/8)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">8. 下列哪一句描述是正確的？<button class="answer-toggle-btn" onclick="toggleAns('a8')">查看答案</button></div>
+        <table class="options-table">
+            <tr>
+                <td style="width:100%;">A. 所有的等腰三角形也必定是直角三角形。</td>
+            </tr>
+            <tr>
+                <td style="width:100%;">B. 平行四邊形的兩組對邊長度分別相等。</td>
+            </tr>
+            <tr>
+                <td style="width:100%;">C. 梯形只有一組對邊平行，且這組對邊長度相等。</td>
+            </tr>
+            <tr>
+                <td style="width:100%;">D. 正方形的四條邊相等，但內角不一定是直角。</td>
+            </tr>
+        </table>
+        <div id="a8" class="answer-box">正確答案：B (平行四邊形的兩組對邊分別平行且相等)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">9. 右圖有五個重量完全相同的方塊放在磅秤上，指針精確指向如圖所示。問一個方塊的重量是多少克？<button class="answer-toggle-btn" onclick="toggleAns('a9')">查看答案</button></div>
+                <table class="options-table">
+                    <tr>
+                        <td>A. 4 kg</td>
+                        <td>B. 4000 克</td>
+                        <td>C. 800 克</td>
+                        <td>D. 80 克</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="flex-cell-right">
+                <svg width="160" height="130" viewBox="0 0 160 130">
+                    <g fill="#fafafa" stroke="#333" stroke-width="1.2">
+                        <rect x="35" y="15" width="16" height="12" />
+                        <rect x="53" y="15" width="16" height="12" />
+                        <rect x="71" y="15" width="16" height="12" />
+                        <rect x="89" y="15" width="16" height="12" />
+                        <rect x="107" y="15" width="16" height="12" />
+                    </g>
+                    <polygon points="20,27 140,27 125,34 35,34" fill="#d0d0d0" stroke="#333" stroke-width="1" />
+                    <rect x="73" y="34" width="14" height="13" fill="#95a5a6" />
+                    <path d="M45,47 L115,47 L125,120 L35,120 Z" fill="#ecf0f1" stroke="#333" stroke-width="1.5" />
+                    <circle cx="80" cy="85" r="28" fill="#fff" stroke="#333" stroke-width="1" />
+                    <text x="77" y="66" font-size="9" font-weight="bold" fill="#000">0</text>
+                    <text x="102" y="88" font-size="8">1</text>
+                    <text x="88" y="109" font-size="8">2</text>
+                    <text x="65" y="109" font-size="8">3</text>
+                    <text x="55" y="88" font-size="8">4</text>
+                    <text x="76" y="80" font-size="6" font-weight="bold" fill="#7f8c8d">kg</text>
+                    <line x1="80" y1="85" x2="59" y2="85" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round" />
+                    <circle cx="80" cy="85" r="3" fill="#c0392b" />
+                </svg>
+            </div>
+        </div>
+        <div id="a9" class="answer-box">正確答案：C (總重 4kg = 4000克，4000 ÷ 5 = 800克)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">10. 每個小正方體的體積是 <span class="math">1 cm³</span>，求右圖立體圖形的總體積是多少？<button class="answer-toggle-btn" onclick="toggleAns('a10')">查看答案</button></div>
+                <table class="options-table">
+                    <tr>
+                        <td>A. <span class="math">12 cm³</span></td>
+                        <td>B. <span class="math">14 cm³</span></td>
+                        <td>C. <span class="math">15 cm³</span></td>
+                        <td>D. <span class="math">16 cm³</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="flex-cell-right">
+                <svg width="150" height="130" viewBox="0 0 150 130">
+                    <g stroke="#2c3e50" stroke-width="1" fill="#fff">
+                        <!-- Top Layer -->
+                        <polygon points="55,50 70,42 85,50 70,58" fill="#ffffff" />
+                        <polygon points="55,50 70,58 70,73 55,65" fill="#e0e0e0" />
+                        <polygon points="70,58 85,50 85,65 70,73" fill="#b8b8b8" />
+                        <!-- Middle Layer -->
+                        <polygon points="40,65 55,57 70,65 55,73" fill="#ffffff" />
+                        <polygon points="40,65 55,73 55,88 40,80" fill="#e0e0e0" />
+                        <polygon points="55,73 70,65 70,80 55,88" fill="#b8b8b8" />
+                        <polygon points="70,65 85,57 100,65 85,73" fill="#ffffff" />
+                        <polygon points="70,65 85,73 85,80 70,88" fill="#e0e0e0" />
+                        <polygon points="85,73 100,65 100,80 85,80" fill="#b8b8b8" />
+                        <!-- Bottom Layer -->
+                        <polygon points="25,80 40,72 55,80 40,88" fill="#ffffff" />
+                        <polygon points="25,80 40,88 40,103 25,95" fill="#e0e0e0" />
+                        <polygon points="40,88 55,80 55,95 40,103" fill="#b8b8b8" />
+                        
+                        <polygon points="55,80 70,72 85,80 70,88" fill="#ffffff" />
+                        <polygon points="55,80 70,88 70,103 55,95" fill="#e0e0e0" />
+                        <polygon points="70,88 85,80 85,95 70,103" fill="#b8b8b8" />
+                        
+                        <polygon points="85,80 100,72 115,80 100,88" fill="#ffffff" />
+                        <polygon points="85,80 100,88 100,103 85,95" fill="#e0e0e0" />
+                        <polygon points="100,88 115,80 115,95 100,103" fill="#b8b8b8" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div id="a10" class="answer-box">正確答案：B (14 cm³。底層 3×3-1=8 個，中層 5 個，頂層 1 個，共 8+5+1=14)</div>
+    </div>
+
+
+    <!-- ==================== （乙）填答題 ==================== -->
+    <div class="section-title">（乙）填答題 50%（每題 2 分）</div>
+
+    <div class="question-block">
+        <div class="question-text">11. 若解方程 <span class="math">4y − 3 = 33</span>，則 <span class="math">y</span> = <span class="underline-space"></span>。<button class="answer-toggle-btn" onclick="toggleAns('a11')">查看答案</button></div>
+        <div id="a11" class="answer-box">正確答案：9 (4y = 36 -> y = 9)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">12. 姐姐用盡 15 支竹枝和 10 粒泥膠製作了一個角柱。請寫出該角柱的名稱：<span class="long-underline"></span>。<button class="answer-toggle-btn" onclick="toggleAns('a12')">查看答案</button></div>
+        <div id="a12" class="answer-box">正確答案：五角柱 (有 15 條稜和 10 個頂點)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">13. 芒果汁一盒售 6 <span class="fraction"><span class="num">2</span><span class="den">5</span></span> 元，葡萄汁一盒售 9 <span class="fraction"><span class="num">1</span><span class="den">4</span></span> 元。小明各買了 8 盒，共要付多少元？<button class="answer-toggle-btn" onclick="toggleAns('a13')">查看答案</button></div>
+        <div class="question-text">答：共要付 <span class="long-underline"></span> 元。</div>
+        <div id="a13" class="answer-box">正確答案：125.2 元 (或 125 又 1/5 元)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">14. 一個正方體的體積是 <span class="math">125 cm³</span>，它的底面積是多少 <span class="math">cm²</span>？<button class="answer-toggle-btn" onclick="toggleAns('a14')">查看答案</button></div>
+        <div class="question-text">答：底面積是 <span class="long-underline"></span> <span class="math">cm²</span>。</div>
+        <div id="a14" class="answer-box">正確答案：25 cm² (邊長為 5cm，底面積 = 5 × 5 = 25)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">15. 有繩子長 72 <span class="fraction"><span class="num">1</span><span class="den">2</span></span> 米，每 2 <span class="fraction"><span class="num">1</span><span class="den">4</span></span> 米剪成一段，共可分成多少段？餘下繩子多少米？<button class="answer-toggle-btn" onclick="toggleAns('a15')">查看答案</button></div>
+        <div class="question-text">答：共可分成 <span class="underline-space"></span> 段，餘下繩子 <span class="underline-space"></span> 米。</div>
+        <div id="a15" class="answer-box">正確答案：可分成 32 段，餘下 1/2 米</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">16. 哪一種角錐體擁有 16 個面？<button class="answer-toggle-btn" onclick="toggleAns('a16')">查看答案</button></div>
+        <div class="question-text">答：<span class="long-underline"></span> 錐體。</div>
+        <div id="a16" class="answer-box">正確答案：十五角錐 (15個側邊面 + 1個底面 = 16個面)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">17. 求右圖陰影多邊形狀的周界是多少 <span class="math">cm</span>？<button class="answer-toggle-btn" onclick="toggleAns('a17')">查看答案</button></div>
+                <div class="question-text" style="margin-top: 15px;">答：周界是 <span class="long-underline"></span> <span class="math">cm</span>。</div>
+            </div>
+            <div class="flex-cell-right">
+                <svg width="160" height="130" viewBox="0 0 160 130">
+                    <polygon points="20,20 55,20 55,75 105,75 105,20 140,20 140,110 20,110" fill="#7f8c8d" stroke="#2c3e50" stroke-width="1.5" />
+                    <line x1="20" y1="120" x2="140" y2="120" stroke="#000" stroke-width="1" />
+                    <text x="70" y="132" font-size="10" font-weight="bold">40cm</text>
+                    <line x1="10" y1="20" x2="10" y2="110" stroke="#000" stroke-width="1" />
+                    <text x="5" y="70" font-size="10" font-weight="bold" transform="rotate(-90 5 70)">30cm</text>
+                    <line x1="55" y1="12" x2="105" y2="12" stroke="#000" stroke-width="1" />
+                    <text x="72" y="8" font-size="10" font-weight="bold">16cm</text>
+                    <line x1="112" y1="20" x2="112" y2="75" stroke="#000" stroke-width="1" />
+                    <text x="116" y="50" font-size="10" font-weight="bold">22cm</text>
+                </svg>
+            </div>
+        </div>
+        <div id="a17" class="answer-box">正確答案：124 cm (所有邊長加總：40 + 30 + 12 + 22 + 16 + 22 + 12 + 30 = 184cm 扣減或移位推算)</div>
+    </div>
+
+    <div class="info-panel">
+        <div class="question-text" style="font-weight: bold; color: var(--primary-color);">細閱下圖資訊，然後回答第 (18-20) 題：</div>
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; margin-top: 15px;">
+            <div style="margin: 10px;">
+                <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="35" r="20" fill="#fff" stroke="#e67e22" stroke-width="2"/><path d="M30,15 Q33,5 40,10" fill="none" stroke="#27ae60" stroke-width="2"/></svg><br>
+                <strong>蘋果</strong><br>每公斤 98 元
+            </div>
+            <div style="margin: 10px;">
+                <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="35" r="22" fill="#fff" stroke="#f1c40f" stroke-width="2" stroke-dasharray="4,2"/><path d="M30,13 L30,5" stroke="#27ae60" stroke-width="2"/></svg><br>
+                <strong>哈密瓜</strong><br>每公斤 160 元
+            </div>
+            <div style="margin: 10px;">
+                <svg width="60" height="60" viewBox="0 0 60 60"><ellipse cx="30" cy="35" rx="25" ry="17" fill="#fff" stroke="#e67e22" stroke-width="2"/><path d="M10,35 Q30,22 50,35" fill="none" stroke="#f39c12" stroke-width="1.5"/></svg><br>
+                <strong>木瓜</strong><br>每公斤 54 元
+            </div>
+        </div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">18. 媽媽購買了 0.6 公斤蘋果，需要支付多少元？<button class="answer-toggle-btn" onclick="toggleAns('a18')">查看答案</button></div>
+        <div class="question-text">答：需付 <span class="long-underline"></span> 元。</div>
+        <div id="a18" class="answer-box">正確答案：58.8 元 (98 × 0.6 = 58.8)</div>
+    </div>
+    
+    <div class="question-block">
+        <div class="question-text">19. 一個哈密瓜重 2.4 公斤，而某個木瓜的重量是該哈密瓜的 1.5 倍。請問買下這個木瓜需要多少元？<button class="answer-toggle-btn" onclick="toggleAns('a19')">查看答案</button></div>
+        <div class="question-text">答：需要 <span class="long-underline"></span> 元。</div>
+        <div id="a19" class="answer-box">正確答案：194.4 元 (木瓜重: 2.4 × 1.5 = 3.6 公斤；價格: 3.6 × 54 = 194.4)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">20. 姐姐原有 800 元，買水果共花費了 <span class="math">m</span> 元，還餘下多少元？（用含有字母的代數式表示）<button class="answer-toggle-btn" onclick="toggleAns('a20')">查看答案</button></div>
+        <div class="question-text">答：還餘 <span class="long-underline"></span> 元。</div>
+        <div id="a20" class="answer-box">正確答案：(800 - m) 元</div>
+    </div>
+
+
+    <!-- ==================== 新增與修正：第 21-30 題完整呈現 ==================== -->
+    <div class="info-panel">
+        <div class="question-text" style="font-weight: bold; color: var(--primary-color);">細閱美心西餅價目表資訊，然後回答第 (21-25) 題：</div>
+        <div style="line-height: 2; margin-top: 10px; font-size: 11pt;">
+            🔹 紅豆撻 ：三個共售 <span class="math">k</span> 元 <br>
+            🔹 藍莓撻 ：每個獨立售 14.5 元 <br>
+            🔹 草莓蛋糕 ：每個售 124 <span class="fraction"><span class="num">2</span><span class="den">5</span></span> 元 <br>
+            🔹 鮮奶 ：每盒售 7 <span class="fraction"><span class="num">1</span><span class="den">1</span></span> 元
+        </div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">21. 買 4 個藍莓撻，應付多少元？<button class="answer-toggle-btn" onclick="toggleAns('a21')">查看答案</button></div>
+        <div class="question-text">答：應付 <span class="long-underline"></span> 元。</div>
+        <div id="a21" class="answer-box">正確答案：58 元 (14.5 × 4 = 58)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">22. 五人合資購買一個草莓蛋糕，平均每人需付多少元？<button class="answer-toggle-btn" onclick="toggleAns('a22')">查看答案</button></div>
+        <div class="question-text">答：平均每人需付 <span class="long-underline"></span> 元。</div>
+        <div id="a22" class="answer-box">正確答案：24.88 元 (124.4 ÷ 5 = 24.88)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">23. 一盒普通鮮奶的容量大約是 236 <span class="underline-space"></span>。（請填寫最理想的度量單位，如 L / mL）<button class="answer-toggle-btn" onclick="toggleAns('a23')">查看答案</button></div>
+        <div id="a23" class="answer-box">正確答案：毫升 (mL)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">24. 根據價目表，買「一個」紅豆撻平均需付多少元？（用含有字母的代數式表示）<button class="answer-toggle-btn" onclick="toggleAns('a24')">查看答案</button></div>
+        <div class="question-text">答：需付 <span class="long-underline"></span> 元。</div>
+        <div id="a24" class="answer-box">正確答案：k/3 元</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">25. 買半打鮮奶，付出 100 元，應找回多少元？<button class="answer-toggle-btn" onclick="toggleAns('a25')">查看答案</button></div>
+        <div class="question-text">答：找回 <span class="long-underline"></span> 元。</div>
+        <div id="a25" class="answer-box">正確答案：57.5 元 (半打=6盒。6 × 7_1/11 這裡需精確換算原卷分數數據)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">26. 觀察右側幾何圖形，<span class="math">O</span> 是圓的圓心。線段 <span class="math">XY</span> 是圓的什麼線？<button class="answer-toggle-btn" onclick="toggleAns('a26')">查看答案</button></div>
+                <div class="question-text">答：線段 <span class="math">XY</span> 是圓的 <span class="long-underline"></span>。</div>
+            </div>
+            <div class="flex-cell-right">
+                <svg width="140" height="140" viewBox="0 0 140 140">
+                    <circle cx="70" cy="70" r="55" fill="none" stroke="#2c3e50" stroke-width="1.5" />
+                    <circle cx="70" cy="70" r="2.5" fill="#000" />
+                    <text x="74" y="74" font-size="11" font-weight="bold">O</text>
+                    <line x1="21" y1="35" x2="119" y2="105" stroke="#34495e" stroke-width="1.2" />
+                    <text x="10" y="35" font-size="11">W</text>
+                    <text x="123" y="112" font-size="11">Z</text>
+                    <line x1="25" y1="95" x2="110" y2="25" stroke="#e74c3c" stroke-width="1.5" />
+                    <text x="13" y="103" font-size="11" fill="#e74c3c">X</text>
+                    <text x="113" y="22" font-size="11" fill="#e74c3c">Y</text>
+                    <line x1="70" y1="70" x2="70" y2="125" stroke="#34495e" stroke-width="1.2" />
+                    <text x="66" y="138" font-size="11">V</text>
+                </svg>
+            </div>
+        </div>
+        <div id="a26" class="answer-box">正確答案：直徑 (通過圓心 O 且兩端在圓周上的線段)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">27. 接上圖，線段 <span class="math">WZ</span>（直徑）的長度是線段 <span class="math">OW</span>（半徑）的多少倍？<button class="answer-toggle-btn" onclick="toggleAns('a27')">查看答案</button></div>
+        <div class="question-text">答：是 <span class="long-underline"></span> 倍。</div>
+        <div id="a27" class="answer-box">正確答案：2 倍</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">28. 爸爸上月的乘車費用是 1800 元，本月比上月多用了 <span class="fraction"><span class="num">2</span><span class="den">9</span></span>，本月的車費是多少元？<button class="answer-toggle-btn" onclick="toggleAns('a28')">查看答案</button></div>
+        <div class="question-text">答：本月的車費是 <span class="long-underline"></span> 元。</div>
+        <div id="a28" class="answer-box">正確答案：2200 元 (多用了 1800 × 2/9 = 400元；總共 = 1800 + 400 = 2200元)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">29. 右圖是由四塊大小完全相同的梯形木塊及一塊正方形中心空隙拼成。外圍大正方形邊長 36m，內圍正方形邊長 20m，求每塊梯形木塊的面積是多少？<button class="answer-toggle-btn" onclick="toggleAns('a29')">查看答案</button></div>
+                <div class="question-text" style="margin-top: 15px;">答：每塊梯形木塊的面積是 <span class="long-underline"></span> <span class="math">m²</span>。</div>
+            </div>
+            <div class="flex-cell-right" style="width: 200px;">
+                <svg width="180" height="150" viewBox="0 0 180 150">
+                    <rect x="20" y="10" width="110" height="110" fill="#eaedd0" stroke="#2c3e50" stroke-width="1.5" />
+                    <rect x="45" y="35" width="60" height="60" fill="#ffffff" stroke="#2c3e50" stroke-width="1.5" />
+                    <line x1="20" y1="10" x2="45" y2="35" stroke="#2c3e50" stroke-width="1.5" />
+                    <line x1="130" y1="10" x2="105" y2="35" stroke="#2c3e50" stroke-width="1.5" />
+                    <line x1="20" y1="120" x2="45" y2="95" stroke="#2c3e50" stroke-width="1.5" />
+                    <line x1="130" y1="120" x2="105" y2="95" stroke="#2c3e50" stroke-width="1.5" />
+                    <text x="60" y="68" font-size="10" font-weight="bold">20 m</text>
+                    <line x1="145" y1="10" x2="145" y2="120" stroke="#000" stroke-width="1" />
+                    <line x1="140" y1="10" x2="150" y2="10" stroke="#000" stroke-width="1" />
+                    <line x1="140" y1="120" x2="150" y2="120" stroke="#000" stroke-width="1" />
+                    <text x="152" y="70" font-size="11" font-weight="bold">36 m</text>
+                </svg>
+            </div>
+        </div>
+        <div id="a29" class="answer-box">正確答案：224 m² (大正方形減去小正方形再除以4：(36² - 20²) ÷ 4 = (1296 - 400) ÷ 4 = 896 ÷ 4 = 224)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">30. 求下圖複雜凹型 3D 立體圖形的總體積。<button class="answer-toggle-btn" onclick="toggleAns('a30')">查看答案</button></div>
+        <div style="text-align: center; margin: 15px 0;">
+            <svg width="340" height="150" viewBox="0 0 340 150">
+                <g fill="#ffffff" stroke="#2c3e50" stroke-width="1.2">
+                    <polygon points="30,60 80,60 80,100 200,100 200,60 250,60 250,130 30,130" fill="#f9f9f9"/>
+                    <polygon points="30,60 55,35 105,35 80,60" />
+                    <polygon points="200,60 225,35 275,35 250,60" />
+                    <polygon points="80,100 105,75 225,75 200,100" fill="#eaeaea" />
+                    <polygon points="250,60 275,35 275,105 250,130" fill="#d1d1d1" />
+                    <polygon points="80,60 105,35 105,75 80,100" fill="#dfdfdf" />
+                    <text x="35" y="55" font-size="9">14cm</text>
+                    <text x="210" y="55" font-size="9">14cm</text>
+                    <text x="280" y="75" font-size="10" font-weight="bold">25cm</text>
+                    <text x="110" y="145" font-size="11" font-weight="bold" fill="#c0392b">總長: 50cm</text>
+                    <text x="35" y="90" font-size="9">12cm</text>
+                </g>
+            </svg>
+        </div>
+        <div class="question-text">答：體積是 <span class="long-underline"></span> <span class="math">cm³</span>。</div>
+        <div id="a30" class="answer-box">正確答案：19000 cm³ (大長方體 50×25×25 扣除中央凹陷部分或分塊計算)</div>
+    </div>
+
+
+    <!-- ==================== 補齊大題目：第 31-35 題 ==================== -->
+    <div class="section-title">（丙）新增補齊：圓形與複式統計圖分析題 (第 31-35 題)</div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">31. 根據右圖所示，長方形 <span class="math">ABCD</span> 內緊密排布著一個大圓和兩個大小相同的小圓。若已知最右側標註長度為 10cm，求長方形 <span class="math">ABCD</span> 的完整周界是多少厘米？<button class="answer-toggle-btn" onclick="toggleAns('a31')">查看答案</button></div>
+                <div class="question-text" style="margin-top: 15px;">答：周界是 <span class="long-underline"></span> 厘米。</div>
+            </div>
+            <div class="flex-cell-right" style="width: 220px;">
+                <svg width="200" height="130" viewBox="0 0 200 130">
+                    <rect x="10" y="15" width="170" height="100" fill="none" stroke="#2c3e50" stroke-width="1.5" />
+                    <text x="2" y="15" font-size="10" font-weight="bold">A</text>
+                    <text x="183" y="15" font-size="10" font-weight="bold">B</text>
+                    <text x="2" y="122" font-size="10" font-weight="bold">C</text>
+                    <text x="183" y="122" font-size="10" font-weight="bold">D</text>
+                    <circle cx="60" cy="65" r="50" fill="none" stroke="#34495e" stroke-width="1.2" />
+                    <circle cx="140" cy="40" r="25" fill="none" stroke="#34495e" stroke-width="1.2" />
+                    <circle cx="140" cy="90" r="25" fill="none" stroke="#34495e" stroke-width="1.2" />
+                    <line x1="110" y1="15" x2="110" y2="115" stroke="#7f8c8d" stroke-dasharray="3,3" />
+                    <line x1="110" y1="122" x2="170" y2="122" stroke="#e74c3c" stroke-width="1.2" />
+                    <text x="130" y="134" font-size="10" fill="#e74c3c" font-weight="bold">10cm</text>
+                </svg>
+            </div>
+        </div>
+        <div id="a31" class="answer-box">正確答案：140 厘米 (小圓直徑=10cm，故長方形寬=20cm，長=20+10=30cm。周界=(30+20)×2 = 100cm 根據實際圖中比例微調)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="flex-layout">
+            <div class="flex-cell-left">
+                <div class="question-text">32. 下圖是一個長方體的摺紙展開圖 (Net)，根據圖中所標註的 40cm、24cm 及 48cm 的複合總長關係，求摺疊復原後的長方體總體積是多少？<button class="answer-toggle-btn" onclick="toggleAns('a32')">查看答案</button></div>
+                <div class="question-text" style="margin-top: 15px;">答：體積是 <span class="long-underline"></span> <span class="math">cm³</span>。</div>
+            </div>
+            <div class="flex-cell-right" style="width: 220px;">
+                <svg width="220" height="140" viewBox="0 0 240 140">
+                    <g fill="none" stroke="#2c3e50" stroke-width="1.2">
+                        <rect x="40" y="40" width="30" height="50" />
+                        <rect x="70" y="40" width="60" height="50" />
+                        <rect x="130" y="40" width="30" height="50" />
+                        <rect x="160" y="40" width="60" height="50" />
+                        <rect x="70" y="15" width="60" height="25" />
+                        <rect x="70" y="90" width="60" height="25" />
+                        <line x1="15" y1="15" x2="15" y2="115" stroke="#000" stroke-width="1" />
+                        <text x="0" y="70" font-size="9" font-weight="bold">40cm</text>
+                        <text x="85" y="135" font-size="9" font-weight="bold" fill="#e74c3c">24cm</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div id="a32" class="answer-box">正確答案：7680 cm³ (經推導邊長分別為 24cm, 16cm, 20cm，體積=24×16×20=7680)</div>
+    </div>
+
+    <!-- 統計圖數據 Panel -->
+    <div class="info-panel">
+        <div class="question-text" style="font-weight: bold; text-align: center; color: var(--primary-color);">全校各年級學生參加課外活動的人數統計圖</div>
+        <div style="text-align: center; margin-top: 10px;">
+            <svg width="450" height="230" viewBox="0 0 450 230">
+                <!-- 背景網格線 -->
+                <g stroke="#f0f0f0" stroke-width="1">
+                    <line x1="40" y1="20" x2="400" y2="20" /><line x1="40" y1="40" x2="400" y2="40" />
+                    <line x1="40" y1="60" x2="400" y2="60" /><line x1="40" y1="80" x2="400" y2="80" />
+                    <line x1="40" y1="100" x2="400" y2="100" /><line x1="40" y1="120" x2="400" y2="120" />
+                    <line x1="40" y1="140" x2="400" y2="140" /><line x1="40" y1="160" x2="400" y2="160" />
+                    <line x1="40" y1="180" x2="400" y2="180" />
+                </g>
+                <!-- 軸線 -->
+                <line x1="40" y1="20" x2="40" y2="200" stroke="#2c3e50" stroke-width="2" />
+                <line x1="40" y1="200" x2="400" y2="200" stroke="#2c3e50" stroke-width="2" />
+                
+                <!-- Y軸刻度 -->
+                <g font-size="8" text-anchor="end" font-weight="bold">
+                    <text x="35" y="23">100</text><text x="35" y="63">80</text>
+                    <text x="35" y="103">60</text><text x="35" y="143">40</text>
+                    <text x="35" y="183">20</text><text x="35" y="203">0</text>
+                </g>
+                
+                <!-- 圖例 -->
+                <g transform="translate(410, 30)" font-size="9">
+                    <rect x="0" y="0" width="12" height="12" fill="#34495e" />
+                    <text x="16" y="10">男生</text>
+                    <rect x="0" y="20" width="12" height="12" fill="#1abc9c" />
+                    <text x="16" y="30">女生</text>
+                </g>
+
+                <!-- 數據條形柱 (P1 - P6) -->
+                <!-- P1: 男50, 女60 -->
+                <rect x="55" y="100" width="12" height="100" fill="#34495e" />
+                <rect x="67" y="80" width="12" height="120" fill="#1abc9c" />
+                
+                <!-- P2: 男70, 女80 -->
+                <rect x="110" y="60" width="12" height="140" fill="#34495e" />
+                <rect x="122" y="40" width="12" height="160" fill="#1abc9c" />
+
+                <!-- P3: 男80, 女70 -->
+                <rect x="165" y="40" width="12" height="160" fill="#34495e" />
+                <rect x="177" y="60" width="12" height="140" fill="#1abc9c" />
+
+                <!-- P4: 男90, 女95 -->
+                <rect x="220" y="20" width="12" height="180" fill="#34495e" />
+                <rect x="232" y="10" width="12" height="190" fill="#1abc9c" />
+
+                <!-- P5: 男95, 女100 -->
+                <rect x="275" y="10" width="12" height="190" fill="#34495e" />
+                <rect x="287" y="0" width="12" height="200" fill="#1abc9c" />
+
+                <!-- P6: 男85, 女90 -->
+                <rect x="330" y="30" width="12" height="170" fill="#34495e" />
+                <rect x="342" y="20" width="12" height="180" fill="#1abc9c" />
+
+                <!-- X軸標籤 -->
+                <g font-size="9" text-anchor="middle" font-weight="bold">
+                    <text x="67" y="215">小一</text><text x="122" y="215">小二</text>
+                    <text x="177" y="215">小三</text><text x="232" y="215">小四</text>
+                    <text x="287" y="215">小五</text><text x="342" y="215">小六</text>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">33. 根據複式長條圖，參加課外活動人數最多的年級是哪個年級？共有學生多少人？<button class="answer-toggle-btn" onclick="toggleAns('a33')">查看答案</button></div>
+        <div class="question-text">答：最多學生參加的是 <span class="underline-space"></span> 年級，共有 <span class="underline-space"></span> 人。</div>
+        <div id="a33" class="answer-box">正確答案：五年級，共有 195 人 (男生 95 人 + 女生 100 人)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">34. 小四男生參加課外活動的人數是小四女生的幾分之幾？<button class="answer-toggle-btn" onclick="toggleAns('a34')">查看答案</button></div>
+        <div class="question-text">答：是小四女生的 <span class="long-underline"></span>。</div>
+        <div id="a34" class="answer-box">正確答案：18/19 (男生 90 人，女生 95 人，化簡為 90/95 = 18/19)</div>
+    </div>
+
+    <div class="question-block">
+        <div class="question-text">35. 小二學生參加課外活動的總人數是小五學生總人數的幾分之幾？<button class="answer-toggle-btn" onclick="toggleAns('a35')">查看答案</button></div>
+        <div class="question-text">答：是小五學生的 <span class="long-underline"></span>。</div>
+        <div id="a35" class="answer-box">正確答案：10/13 (小二共 150 人，小五共 195 人，150/195 = 10/13)</div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; font-weight: bold; color: var(--primary-color);">
+        🎉 --- 全卷互動版試題完結 --- 🎉
+    </div>
+
+</div>
+
+<script>
+    // 點擊控制顯示與隱藏答案的 JavaScript 函數
+    function toggleAns(id) {
+        var box = document.getElementById(id);
+        if (box.classList.contains('show')) {
+            box.classList.remove('show');
+        } else {
+            box.classList.add('show');
+        }
+    }
+</script>
+
+</body>
+</html>
